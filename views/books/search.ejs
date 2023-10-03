@@ -1,20 +1,26 @@
+<style>
+    #div_books img {
+        cursor: pointer;
+    }
+</style>
+
 <div class="row my-5">
     <div class="col">
-        <div class="row md-2 justify-content-end">
-            <form name="frm" class="col-6 col-md-4 col-lg-3">
+        <h1 class="text-center mb-5">도서검색</h1>
+        <div class="row justify-content-end">
+            <form class="col-6 col-lg-3 col-md-4" name="frm">
                 <div class="input-group">
-                    <input name="query" class="form-control" value="자바">
-                    <button class="btn btn-primary">도서검색</button>
+                    <input class="form-control" placeholder="검색어" name="query" value="웹서버">
+                    <button class="btn btn-primary">검색</button>
                 </div>
             </form>
         </div>
-        <!-- 검색결과 출력 -->
-        <div id="div_books" class="row"></div>
-        <!-- 페이지 이동 -->
-        <div class="text-center">
-            <button id="prev" class="btn btn-primary">이전</button>
-            <span id="span_page" class="mx-3">1/10</span>
-            <button id="next" class="btn btn-primary">다음</button>
+        <hr>
+        <div id="div_books"></div>
+        <div class="text-center" id="div_page">
+            <button class="btn btn-primary" id="prev">이전</button>
+            <span class="mx-3" id="span_page">1/10</span>
+            <button class="btn btn-primary" id="next">다음</button>
         </div>
     </div>
 </div>
@@ -22,17 +28,39 @@
     <table class="table">
     {{#each documents}}
         <tr>
-            <td><img src="{{thumbnail}}" width="50px"></td>
+            <td><img src="{{chkImage thumbnail}}" width="50px"></td>
             <td>{{title}}</td>
-            <td>{{price}}</td>
+            <td>{{fmtprice price}}</td>
             <td>{{authors}}</td>
+            <td><button class="btn btn-primary" index="{{@index}}">도서정보</button></td>
         </tr>
+        <%-include('modal.ejs')%> 
     {{/each}}
     </table>
 </script>
 <script>
+    Handlebars.registerHelper("chkImage", function(image){
+        if(image) {
+            return image;
+        }else {
+          return "http://via.placeholder.com/120x170";
+
+        }
+    });
+
+    Handlebars.registerHelper("fmtprice", function(price){
+        if(price) return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+    });
+</script>
+<script>
     let query=$(frm.query).val();
     let page=1;
+
+    //도서정보 버튼 클릭했을떄
+    $("#div_books").on("click", ".btn-primary", function(){
+        let index=$(this).attr("index");
+        $("#modal" + index).modal("show");
+    });
 
     $(frm).on("submit", function(e){
         e.preventDefault(); //막다
@@ -41,13 +69,13 @@
         getBooks();
     });
 
-    //다음 버튼 이동
+        //다음 버튼 이동
     $("#next").on("click", function(){
         page++;
         getBooks();
     });
 
-        //다음 버튼 이동
+       //이전 버튼 이동
         $("#prev").on("click", function(){
         page--;
         getBooks();

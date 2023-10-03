@@ -1,3 +1,8 @@
+<style>
+    #div_books  img{
+        cursor: pointer;
+    }
+</style>
 <div class="row my-5">
     <div class="col">
         <div class="row md-2 justify-content-end">
@@ -20,26 +25,47 @@
 </div>
 <!-- 도서 정보 출력 탬블릿 -->
 <script type="x-handlebars-template" id="temp_books">
-    <table class="table">
     {{#each documents}}
     <div class="col-6 col-md-4 col-lg-2 mb-2">
         <div class="card">
             <div class="card-body">
-                <img src="{{thumbnail}}" width="50px">
+                <img src="{{thumbnail}}" width="90%" index="{{@index}}">
                 <div class=".ellipsis  text-center">{{title}}</div>
             </div>
             <div class="card-footer">
-                {{price}}
+                {{fmtprice price}}
             </div>
         </div>
     </div>
-{{/each}}
-</table>
+    <%-include('books/modal.ejs')%>
+    {{/each}}
 </script>
 
+<!-- Handlebars 함수 -->
+<script>
+    Handlebars.registerHelper("chkImage", function(image){
+        if(image) {
+            return image;
+        }else {
+          return "https://via.placeholder.com/120x170";
+
+        }
+    });
+
+    Handlebars.registerHelper("fmtprice", function(price){
+        if(price) return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+    });
+</script>
 <script>
     let query=$(frm.query).val();
     let page=1;
+
+    //이미지를 클릭 했을때
+    $("#div_books").on("click", "img", function(){
+        let index=$(this).attr("index");
+        // alert(index);
+        $("#modal" + index).modal("show");
+    });
 
     $(frm).on("submit", function(e){
         e.preventDefault(); //막다
