@@ -1,0 +1,64 @@
+<div class="my-5">
+    <h1 class="text-center mb-5">장바구니</h1>  
+    <div id="div_cart"></div>
+</div>
+<!-- each .장바구니의 배열을 모두 다 나타내줌 -->
+<!-- {{isbn}} 중요 -->
+<script id="temp_cart" type="x-handlebars-template">
+    <table class="table">
+        {{#each .}}
+            <tr>
+                <td><img src="{{chkImage thumbnail}}" width="50px"></td>
+                <td>{{title}}</td>
+                <td>{{authors}}</td>
+                <td>{{fmtprice price}}</td>
+                <td>{{publisher}}</td>
+                <td><button class="btn btn-danger btn-sm" isbn="{{isbn}}">삭제</button></td>
+            </tr>
+        {{/each}}
+    </table>
+</script>
+<script>
+        Handlebars.registerHelper("chkImage", function(image){
+        if(image) {
+            return image;
+        }else {
+          return "http://via.placeholder.com/120x170";
+
+        }
+    });
+
+    Handlebars.registerHelper("fmtprice", function(price){
+        if(price) return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+    });
+</script>
+
+<script type="module">
+    import { app } from "/javascripts/firebaseInit.js";
+    import { getDatabase, ref, onValue, remove} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js"; //ref는 어디에다 쓸것인지 set, get으로 지정
+    const db = getDatabase(app);    //설정파일 app 지정
+
+    //레퍼런스 지정 (장바구니 목록가져오기)
+    const ref_book=ref(db, `cart/${sessionStorage.getItem("uid")}`); 
+
+
+    onValue(ref_book, snapshot=>{
+        //목록이 여러개여서 forEach문으로 반복
+        let rows=[];   // 배열 순서 지정 중요!
+        snapshot.forEach(row => {
+            // console.log(row.key, row.val());  키 = book 
+            rows.push(row.val()); 
+        });
+        // console.log(rows);
+        const temp=Handlebars.compile($("#temp_cart").html());
+        $("#div_cart").html(temp(rows));
+    });
+
+    //삭제 버튼 누른 경우
+    $("#div_cart").on("click", "button", function(){
+        const isbn=$(this).attr("isbn");
+        if(!confirm(`${isbn} 도서를 삭제하실래요?`)) return;
+        const ref_book=ref(db, `cart/${sessionStorage.getItem("uid")}/${isbn}`);
+        remove(ref_book);
+    });
+</script>

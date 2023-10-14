@@ -28,6 +28,8 @@
     </div>
 </div>
 <!-- 도서 정보 출력 탬블릿 -->
+<!-- index 0,1,2,3 -->
+<!-- this는 book에 함수로 바꿔줌 -->
 <script type="x-handlebars-template" id="temp_books">
     {{#each documents}}
     <div class="col-6 col-md-4 col-lg-2 mb-2">
@@ -59,15 +61,17 @@
     Handlebars.registerHelper("fmtprice", function(price){
         if(price) return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
     });
+
+    // book을 string 타입으로 바꿔주기
     Handlebars.registerHelper("book", function(book){
         return JSON.stringify(book);
     });
     //json오브젝트를 함수로 바꿔주는것
 </script>
-<script type="module">
+<script type="module"> // 데이터베이스를 가져오는것! import를 위해 type="module"
     import { app } from "/javascripts/firebaseInit.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
-    const db = getDatabase(app);
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js"; //ref는 어디에다 쓸것인지 set, get으로 지정
+    const db = getDatabase(app);    //설정파일 app 지정
 
 
     let query=$(frm.query).val();
@@ -75,19 +79,21 @@
 
     //장바구니 아이콘을 클릭했을 때
     $("#div_books").on("click", ".bi-cart", async function(){
+        // 로그인 체크 먼저 확인해 주기!!! 
         if(!sessionStorage.getItem("email")){
+            alert("로그인 되어있지 않아요!");
             location.href="/users/login";
         }else{
             //장바구니에 상품정보 저장
-            const book=JSON.parse($(this).attr("book"));
+            const book=JSON.parse($(this).attr("book")); //책에 대한 정보 담아줌 현재 string타입이여서 object로 바꿔줌  parsㄷ 중요!!!!!!!!!!>> firebase에 넣어줌 사이트들어가서 rules를 true로 바꿔주기!
             console.log(book);
-            const ref_book = `cart/${sessionStorage.getItem("uid")}/${book.isbn}}`;
-            //장바구니에 
-            const snapshot = await get(ref(db, ref_book));
+            const ref_book = `cart/${sessionStorage.getItem("uid")}/${book.isbn}`; // id--isbn중복 방지
+            //장바구니에 상품이 중복되어 있는지 확인 snapshot
+            const snapshot = await get(ref(db, ref_book));  //레퍼런스 지정 get으로 꺼내오기!
             if(snapshot.val()){
                 alert("이미 등록");
             }
-            else{ if(!confirm("장바구니에 저장하실래요?")) return;
+            else{ if(!confirm("장바구니에 저장하실래요?")) return;  // 한번더 확인창 
             set(ref(db, ref_book), book);
             alert("장바구니에 추가 되었습니다!");
             }

@@ -12,11 +12,16 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/locals">지역검색</a>
           </li>
+          <li class="nav-item" id="cart" style="display: none;">
+            <a class="nav-link active" aria-current="page" href="/books/cart">장바구니</a>
+          </li>
         </ul>
-        <ul class="navbar-nav d-flex">
+        <!-- //d-flex 오른쪽메뉴 -->
+        <ul class="navbar-nav d-flex">  
             <li class="nav-item" id="login">
               <a class="nav-link active" aria-current="page" href="/users/login">LOGIN</a>
             </li>
+            <!-- style="display: none; 로그인 후 에 보이게 -->
             <li class="nav-item" id="email" style="display: none;">
               <a class="nav-link active" aria-current="page" href="/users/mypage">email</a>
             </li>
@@ -29,11 +34,13 @@
 </nav>
 
 <script>
+
+  // 값이 있는거 ↓
   if(sessionStorage.getItem("email")){
-    $("#login, #email, #logout").toggle(); //toggle보이는거 보이게 안보이는거 안보이게!
+    $("#login, #email, #logout, #cart").toggle(); //toggle보이는거 보이게 안보이는거 안보이게!
     $("#email a").html(sessionStorage.getItem("email"));
   }
-
+  // 로그아웃시 a태그 클릭시 preventDefault로 이동 막고 session에 저장값을 지우고 email를 다시 토글하게 해줌! 
   $("#logout").on("click", "a",function(e){
     e.preventDefault();
     if(confirm("정말로 로그아웃하실래요?")) {

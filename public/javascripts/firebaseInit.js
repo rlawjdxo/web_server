@@ -9,6 +9,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase
 const firebaseConfig = {
   apiKey: "AIzaSyAqeGGrbfOSNF7cX9yAkjyjl6ZYXlBLqh4",
   authDomain: "fir-53e93.firebaseapp.com",
+  databaseURL: "https://fir-53e93-default-rtdb.firebaseio.com",
   projectId: "fir-53e93",
   storageBucket: "fir-53e93.appspot.com",
   messagingSenderId: "763339251148",
@@ -19,3 +20,5 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+
+// 주의할점 app은 외부 사용 export를 외부에서 사용!!!
