@@ -43,7 +43,7 @@
         if(image) {
             return image;
         }else {
-          return "http://via.placeholder.com/120x170";
+          return "http://via.placeholder.com/120x170"
 
         }
     });
@@ -97,8 +97,8 @@
                 let last = Math.ceil(data.meta.pageable_count/5)
                 $("#span_page").html(page + "/" + last);
 
-                if(page==1)$("#prve").attr("disabled", true);
-                else $("#prve").attr("disabled", false);
+                if(page==1)$("#prev").attr("disabled", true);
+                else $("#prev").attr("disabled", false);
 
                 if(data.meta.is_end) $("#next").attr("disabled", true);
                 else $("#next").attr("disabled", false);

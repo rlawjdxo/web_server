@@ -38,7 +38,8 @@ $(frm).on("submit" , function(e){
     
     } else{
         //회원가입
-        createUserWithEmailAndPassword(auth, email, password).then((success)=>{
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((success)=>{
             alert("회원가입이 완료되었습니다!");
             location.href="/";
         }).catch(error=>{

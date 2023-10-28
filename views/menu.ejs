@@ -15,6 +15,9 @@
           <li class="nav-item" id="cart" style="display: none;">
             <a class="nav-link active" aria-current="page" href="/books/cart">장바구니</a>
           </li>
+          <li class="nav-item" id="favorite" style="display: none;">
+            <a class="nav-link active" aria-current="page" href="/locals/favorite">즐겨찾기</a>
+          </li>
         </ul>
         <!-- //d-flex 오른쪽메뉴 -->
         <ul class="navbar-nav d-flex">  
@@ -37,7 +40,7 @@
 
   // 값이 있는거 ↓
   if(sessionStorage.getItem("email")){
-    $("#login, #email, #logout, #cart").toggle(); //toggle보이는거 보이게 안보이는거 안보이게!
+    $("#login, #email, #logout, #cart, #favorite").toggle(); //toggle보이는거 보이게 안보이는거 안보이게!
     $("#email a").html(sessionStorage.getItem("email"));
   }
   // 로그아웃시 a태그 클릭시 preventDefault로 이동 막고 session에 저장값을 지우고 email를 다시 토글하게 해줌! 

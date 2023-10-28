@@ -27,11 +27,21 @@
             <td class="place">{{place_name}}</td>
             <td>{{address_name}}</td>
             <td class="phone">{{phone}}</td>
+            <td><button class="btn btn-primary" local="{{toString @this}}">즐겨찾기</button></td>
          </tr>
         {{/each}}
     </table>
 </script>
 <script>
+    Handlebars.registerHelper("toString", function(local){
+        return JSON.stringify(local);  //오브젝트를 스트링으로 변환!
+    });
+</script>
+<script type="module">
+    import { app } from "/javascripts/firebaseInit.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js"; //ref는 어디에다 쓸것인지 set, get으로 지정
+    const db = getDatabase(app);    //설정파일 app 지정
+
     let page=1;
     let query=$(frm.query).val();
 
@@ -41,6 +51,26 @@
         page=1;
         getLocals();
     });
+
+    // 즐겨찾기 버튼 누른 경우
+    $("#div_locals").on("click", ".btn-primary", async function(){
+        if(!sessionStorage.getItem("uid")){
+            sessionStorage.setItem("target", "/locals");
+            location.href="/users/login";
+        } else{ //로그인이 된경우
+            const local=JSON.parse($(this).attr("local"));
+            console.log(local);
+            const ref_local=`favorite/${sessionStorage.getItem("uid")}/${local.id}`;
+            const snapshot= await get(ref(db,ref_local));
+            //중복되어 있는지 확인 snapshot
+            if(snapshot.val()){
+                alert("이미 등록");
+            }else{ 
+                await set(ref(db, ref_local), local);
+                alert("추가 되었습니다!");
+            }
+        }
+    })
 
         //다음 버튼 이동
         $("#next").on("click", function(){
@@ -69,8 +99,8 @@
                 let last = Math.ceil(data.meta.pageable_count/5)
                 $("#span_page").html(page + "/" + last);
 
-                if(page==1)$("#prve").attr("disabled", true);
-                else $("#prve").attr("disabled", false);
+                if(page==1)$("#prev").attr("disabled", true);
+                else $("#prev").attr("disabled", false);
 
                 if(data.meta.is_end) $("#next").attr("disabled", true);
                 else $("#next").attr("disabled", false);

@@ -35,7 +35,7 @@
     <div class="col-6 col-md-4 col-lg-2 mb-2">
         <div class="card">
             <div class="card-body">
-                <img src="{{thumbnail}}" width="90%" index="{{@index}}">
+                <img src="{{chkImage thumbnail}}" width="90%" index="{{@index}}">
                 <div class=".ellipsis  text-center">{{title}}</div>
             </div>
             <div class="card-footer">
@@ -54,7 +54,7 @@
         if(image) {
             return image;
         }else {
-          return "https://via.placeholder.com/120x170";
+          return "https://via.placeholder.com/120x170"
         }
     });
 
@@ -142,8 +142,8 @@
                 let last = Math.ceil(data.meta.pageable_count/5)
                 $("#span_page").html(page + "/" + last);
 
-                if(page==1)$("#prve").attr("disabled", true);
-                else $("#prve").attr("disabled", false);
+                if(page==1)$("#prev").attr("disabled", true);
+                else $("#prev").attr("disabled", false);
 
                 if(data.meta.is_end) $("#next").attr("disabled", true);
                 else $("#next").attr("disabled", false);
