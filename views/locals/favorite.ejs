@@ -42,8 +42,8 @@
     $("#div_favorite").on("click", "button", async function(){
         const id=$(this).attr("id");
         if(!confirm(`${id} 즐겨찾기를 삭제하실래요?`)) return;
-        const ref_local=ref(db, `favorite/${sessionStorage.getItem("uid")}/${id}`);
-        await remove(ref_local);
+        const ref_favorite=ref(db, `favorite/${sessionStorage.getItem("uid")}/${id}`);
+        await remove(ref_favorite);
         alert("삭제되었습니다!")
     });
 </script>
