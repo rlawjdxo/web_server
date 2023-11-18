@@ -1,17 +1,13 @@
 <div class="my-5">
     <h1 class="text-center mb-5">글쓰기</h1>
-    <div class="row">
-        <div class="col">
-            <form name="frm">
-                <input name="title" class="form-control mb-2" placeholder="제목을 입력하세요.">
-                <textarea name="body" class="form-control mb-2" rows="10" placeholder="내용을 입력하세요."></textarea>
-                <div class="text-center my-3">
-                    <button class="btn btn-primary px-5">등록</button>
-                    <button class="btn btn-secondary px-5">취소</button>
-                </div>
-            </form>
+    <form name="frm">
+        <input name="title" placeholder="제목을 입력하시오!" class="form-control mb-2">
+        <textarea name="body" placeholder="내용을 입력하시오!" rows="10" class="form-control"></textarea>
+        <div class="text-center my-3">
+            <button type="submit" class="btn btn-primary px-5">등록</button>
+            <button type="reset" class="btn btn-secondary px-5">취소</button>
         </div>
-    </div>
+    </form>
 </div>
 <script type="module">
     import { app } from "/javascripts/firebaseInit.js";
@@ -22,26 +18,19 @@
         e.preventDefault();
         const title=$(frm.title).val();
         const body=$(frm.body).val();
-        if(title==""){
-            alert("제목을 입력하세요!");
+        if(title =="" || body==""){
+            alert("제목 내용을 입력하시오!");
             $(frm.title).focus();
-            return;
-        }else if(body==""){
-            alert("내용을 입력하세요!");
-            $(frm.body).focus();
-            return;
-        }else{
-            if(confirm("새로운 글을 등록하실래요?")){
+        } else{
+            if(confirm("등록하실래요?")){
+                //게시글 등록
+                const email=sessionStorage.getItem("email");
                 const date=moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-                const email = sessionStorage.getItem("email");
-                await addDoc(collection(db, "posts"), {
-                    email:email, 
-                    title:title, 
-                    body:body, 
-                    date:date
-                });
+                //console.log(title,body,email,date);
+                await addDoc(collection(db, 'posts'),{email,date,title,body})
+                alert("게시글 등록완료");
                 location.href="/posts";
-            }
+            } 
         }
-    });
+    })
 </script>
