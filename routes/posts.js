@@ -17,4 +17,10 @@ router.get('/read', function(req, res, next) {
     res.render('index', { title: '게시글정보', pageName:'posts/read.ejs', id });
 });
 
+/* posts 게시판 페이지 */
+router.get('/update', function(req, res, next) {
+    const id=req.query.id;
+    res.render('index', { title: '게시글수정', pageName:'posts/update.ejs', id });
+});
+
 module.exports = router;
